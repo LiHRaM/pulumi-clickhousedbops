@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-xyz/examples
+module github.com/LiHRaM/pulumi-clickhousedbops/examples
 
 go 1.23.0
 
