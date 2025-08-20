@@ -29,5 +29,10 @@ var pulumiSchema []byte
 
 func main() {
 	// Modify the path to point to the new provider
-	tfbridge.Main(context.Background(), "clickhousedbops", clickhousedbops.Provider(), tfbridge.ProviderMetadata{PackageSchema: pulumiSchema})
+	tfbridge.Main(
+		context.Background(),
+		"clickhousedbops",
+		clickhousedbops.Provider(),
+		tfbridge.ProviderMetadata{PackageSchema: pulumiSchema},
+	)
 }

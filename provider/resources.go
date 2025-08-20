@@ -222,5 +222,9 @@ func autoNameByProperties(_ context.Context, state resource.PropertyMap) (resour
 }
 
 func delegateID(field resource.PropertyKey) tfbridge.ComputeID {
-	return tfbridge.DelegateIDField(field, "clickhousedbops", "https://github.com/ClickHouse/terraform-provider-clickhousedbops")
+	return tfbridge.DelegateIDField(
+		field,
+		"clickhousedbops",
+		"https://github.com/ClickHouse/terraform-provider-clickhousedbops",
+	)
 }
