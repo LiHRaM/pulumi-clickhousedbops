@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-xyz/sdk
+module github.com/LiHRaM/pulumi-clickhousedbops/sdk
 
 go 1.23.0
 
