@@ -203,6 +203,11 @@ func Provider() tfbridge.ProviderInfo {
 	prov.MustApplyAutoAliases()
 	prov.SetAutonaming(255, "-")
 
+	// Skip examples that can't be converted due to unknown std package
+	prov.SkipExamples = func(args tfbridge.SkipExamplesArgs) bool {
+		return args.Token == "clickhousedbops:index/user:User"
+	}
+
 	return prov
 }
 
