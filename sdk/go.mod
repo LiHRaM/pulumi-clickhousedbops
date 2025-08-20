@@ -1,4 +1,4 @@
-module github.com/LiHRaM/pulumi-clickhousedbops/sdk
+module github.com/lihram/pulumi-clickhousedbops/sdk
 
 go 1.23.0
 
