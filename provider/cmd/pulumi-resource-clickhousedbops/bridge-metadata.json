@@ -1,1 +1,44 @@
-{}
+{
+    "auto-aliasing": {
+        "resources": {
+            "clickhousedbops_database": {
+                "current": "clickhousedbops:index/database:Database",
+                "majorVersion": 1
+            },
+            "clickhousedbops_grant_privilege": {
+                "current": "clickhousedbops:index/grantPrivilege:GrantPrivilege",
+                "majorVersion": 1
+            },
+            "clickhousedbops_grant_role": {
+                "current": "clickhousedbops:index/grantRole:GrantRole",
+                "majorVersion": 1
+            },
+            "clickhousedbops_role": {
+                "current": "clickhousedbops:index/role:Role",
+                "majorVersion": 1
+            },
+            "clickhousedbops_setting": {
+                "current": "clickhousedbops:index/setting:Setting",
+                "majorVersion": 1
+            },
+            "clickhousedbops_settings_profile": {
+                "current": "clickhousedbops:index/settingsProfile:SettingsProfile",
+                "majorVersion": 1,
+                "fields": {
+                    "inherit_from": {
+                        "maxItemsOne": false
+                    }
+                }
+            },
+            "clickhousedbops_settings_profile_association": {
+                "current": "clickhousedbops:index/settingsProfileAssociation:SettingsProfileAssociation",
+                "majorVersion": 1
+            },
+            "clickhousedbops_user": {
+                "current": "clickhousedbops:index/user:User",
+                "majorVersion": 1
+            }
+        }
+    },
+    "auto-settings": {}
+}

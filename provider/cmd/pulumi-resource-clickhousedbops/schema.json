@@ -1,15 +1,15 @@
 {
-    "name": "xyz",
-    "description": "A Pulumi package for creating and managing xyz cloud resources.",
+    "name": "clickhousedbops",
+    "description": "A Pulumi package for creating and managing clickhousedbops cloud resources.",
     "keywords": [
-        "xyz",
+        "clickhousedbops",
         "category/cloud"
     ],
     "homepage": "https://www.pulumi.com",
     "license": "Apache-2.0",
-    "attribution": "This Pulumi package is based on the [`xyz` Terraform Provider](https://github.com/terraform-providers/terraform-provider-xyz).",
-    "repository": "https://github.com/pulumi/pulumi-xyz",
-    "publisher": "Pulumi",
+    "attribution": "This Pulumi package is based on the [`clickhousedbops` Terraform Provider](https://github.com/ClickHouse/terraform-provider-clickhousedbops).",
+    "repository": "https://github.com/LiHRaM/pulumi-clickhousedbops",
+    "publisher": "LiHRaM",
     "meta": {
         "moduleFormat": "(.*)(?:/[^/]*)"
     },
@@ -22,20 +22,20 @@
             "respectSchemaVersion": true
         },
         "go": {
-            "importBasePath": "github.com/pulumi/pulumi-xyz/sdk/go/xyz",
+            "importBasePath": "github.com/LiHRaM/pulumi-clickhousedbops/sdk/go/clickhousedbops",
             "generateResourceContainerTypes": true,
             "generateExtraInputTypes": true,
             "respectSchemaVersion": true
         },
         "nodejs": {
-            "packageDescription": "A Pulumi package for creating and managing xyz cloud resources.",
-            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/terraform-providers/terraform-provider-xyz)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-xyz` repo](https://github.com/pulumi/pulumi-xyz/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-xyz` repo](https://github.com/terraform-providers/terraform-provider-xyz/issues).",
+            "packageDescription": "A Pulumi package for creating and managing clickhousedbops cloud resources.",
+            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/ClickHouse/terraform-provider-clickhousedbops)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-clickhousedbops` repo](https://github.com/LiHRaM/pulumi-clickhousedbops/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-clickhousedbops` repo](https://github.com/ClickHouse/terraform-provider-clickhousedbops/issues).",
             "compatibility": "tfbridge20",
             "disableUnionOutputTypes": true,
             "respectSchemaVersion": true
         },
         "python": {
-            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/terraform-providers/terraform-provider-xyz)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-xyz` repo](https://github.com/pulumi/pulumi-xyz/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-xyz` repo](https://github.com/terraform-providers/terraform-provider-xyz/issues).",
+            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/ClickHouse/terraform-provider-clickhousedbops)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-clickhousedbops` repo](https://github.com/LiHRaM/pulumi-clickhousedbops/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-clickhousedbops` repo](https://github.com/ClickHouse/terraform-provider-clickhousedbops/issues).",
             "compatibility": "tfbridge20",
             "respectSchemaVersion": true,
             "pyproject": {
@@ -45,68 +45,738 @@
     },
     "config": {
         "variables": {
-            "region": {
+            "authConfig": {
+                "$ref": "#/types/clickhousedbops:config/authConfig:authConfig",
+                "description": "Authentication configuration\n"
+            },
+            "host": {
                 "type": "string",
-                "$ref": "#/types/xyz:region/region:Region",
-                "description": "A region which should be used.\n"
+                "description": "The hostname to use to connect to the clickhouse instance\n"
+            },
+            "port": {
+                "type": "integer",
+                "description": "The port to use to connect to the clickhouse instance\n"
+            },
+            "protocol": {
+                "type": "string",
+                "description": "The protocol to use to connect to clickhouse instance. Valid options are: native, nativesecure, http, https\n"
+            },
+            "tlsConfig": {
+                "$ref": "#/types/clickhousedbops:config/tlsConfig:tlsConfig",
+                "description": "TLS configuration options\n"
             }
-        }
+        },
+        "defaults": [
+            "authConfig",
+            "host",
+            "port",
+            "protocol"
+        ]
     },
     "types": {
-        "xyz:region/region:Region": {
-            "type": "string",
-            "enum": [
-                {
-                    "name": "here",
-                    "value": "HERE"
+        "clickhousedbops:config/authConfig:authConfig": {
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "description": "The password to use to authenticate to ClickHouse\n"
                 },
-                {
-                    "name": "overThere",
-                    "value": "OVER_THERE"
+                "strategy": {
+                    "type": "string",
+                    "description": "The authentication method to use\n"
+                },
+                "username": {
+                    "type": "string",
+                    "description": "The username to use to authenticate to ClickHouse\n"
                 }
-            ]
+            },
+            "type": "object",
+            "required": [
+                "strategy",
+                "username"
+            ],
+            "language": {
+                "nodejs": {
+                    "requiredInputs": []
+                }
+            }
+        },
+        "clickhousedbops:config/tlsConfig:tlsConfig": {
+            "properties": {
+                "insecureSkipVerify": {
+                    "type": "boolean",
+                    "description": "Skip TLS cert verification when using the https protocol. This is insecure!\n"
+                }
+            },
+            "type": "object"
+        },
+        "clickhousedbops:index/ProviderAuthConfig:ProviderAuthConfig": {
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "description": "The password to use to authenticate to ClickHouse\n"
+                },
+                "strategy": {
+                    "type": "string",
+                    "description": "The authentication method to use\n"
+                },
+                "username": {
+                    "type": "string",
+                    "description": "The username to use to authenticate to ClickHouse\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "strategy",
+                "username"
+            ],
+            "language": {
+                "nodejs": {
+                    "requiredOutputs": []
+                }
+            }
+        },
+        "clickhousedbops:index/ProviderTlsConfig:ProviderTlsConfig": {
+            "properties": {
+                "insecureSkipVerify": {
+                    "type": "boolean",
+                    "description": "Skip TLS cert verification when using the https protocol. This is insecure!\n"
+                }
+            },
+            "type": "object"
         }
     },
     "provider": {
-        "description": "The provider type for the xyz package. By default, resources use package-wide configuration\nsettings, however an explicit `Provider` instance may be created and passed during resource\nconstruction to achieve fine-grained programmatic control over provider settings. See the\n[documentation](https://www.pulumi.com/docs/reference/programming-model/#providers) for more information.\n",
+        "description": "The provider type for the clickhousedbops package. By default, resources use package-wide configuration\nsettings, however an explicit `Provider` instance may be created and passed during resource\nconstruction to achieve fine-grained programmatic control over provider settings. See the\n[documentation](https://www.pulumi.com/docs/reference/programming-model/#providers) for more information.\n",
         "properties": {
-            "region": {
+            "authConfig": {
+                "$ref": "#/types/clickhousedbops:index/ProviderAuthConfig:ProviderAuthConfig",
+                "description": "Authentication configuration\n"
+            },
+            "host": {
                 "type": "string",
-                "$ref": "#/types/xyz:region/region:Region",
-                "description": "A region which should be used.\n"
+                "description": "The hostname to use to connect to the clickhouse instance\n"
+            },
+            "port": {
+                "type": "integer",
+                "description": "The port to use to connect to the clickhouse instance\n"
+            },
+            "protocol": {
+                "type": "string",
+                "description": "The protocol to use to connect to clickhouse instance. Valid options are: native, nativesecure, http, https\n"
+            },
+            "tlsConfig": {
+                "$ref": "#/types/clickhousedbops:index/ProviderTlsConfig:ProviderTlsConfig",
+                "description": "TLS configuration options\n"
             }
         },
+        "required": [
+            "authConfig",
+            "host",
+            "port",
+            "protocol"
+        ],
         "inputProperties": {
-            "region": {
+            "authConfig": {
+                "$ref": "#/types/clickhousedbops:index/ProviderAuthConfig:ProviderAuthConfig",
+                "description": "Authentication configuration\n"
+            },
+            "host": {
                 "type": "string",
-                "$ref": "#/types/xyz:region/region:Region",
-                "description": "A region which should be used.\n"
+                "description": "The hostname to use to connect to the clickhouse instance\n"
+            },
+            "port": {
+                "type": "integer",
+                "description": "The port to use to connect to the clickhouse instance\n"
+            },
+            "protocol": {
+                "type": "string",
+                "description": "The protocol to use to connect to clickhouse instance. Valid options are: native, nativesecure, http, https\n"
+            },
+            "tlsConfig": {
+                "$ref": "#/types/clickhousedbops:index/ProviderTlsConfig:ProviderTlsConfig",
+                "description": "TLS configuration options\n"
             }
         },
+        "requiredInputs": [
+            "authConfig",
+            "host",
+            "port",
+            "protocol"
+        ],
         "methods": {
-            "terraformConfig": "pulumi:providers:xyz/terraformConfig"
+            "terraformConfig": "pulumi:providers:clickhousedbops/terraformConfig"
         }
     },
     "resources": {
-        "xyz:index/resource:Resource": {
+        "clickhousedbops:index/database:Database": {
+            "description": "Use the *clickhousedbops_database* resource to create a database in a ClickHouse instance.\n\nKnown limitations:\n\n- Changing the comment on a `database` resource is unsupported and will cause the database to be destroyed and recreated. WARNING: you will lose any content of the database if you do so!\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as clickhousedbops from \"@pulumi/clickhousedbops\";\n\nconst logs = new clickhousedbops.Database(\"logs\", {\n    clusterName: \"cluster\",\n    name: \"logs\",\n});\n```\n```python\nimport pulumi\nimport pulumi_clickhousedbops as clickhousedbops\n\nlogs = clickhousedbops.Database(\"logs\",\n    cluster_name=\"cluster\",\n    name=\"logs\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Clickhousedbops = Pulumi.Clickhousedbops;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var logs = new Clickhousedbops.Database(\"logs\", new()\n    {\n        ClusterName = \"cluster\",\n        Name = \"logs\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/LiHRaM/pulumi-clickhousedbops/sdk/go/clickhousedbops\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := clickhousedbops.NewDatabase(ctx, \"logs\", \u0026clickhousedbops.DatabaseArgs{\n\t\t\tClusterName: pulumi.String(\"cluster\"),\n\t\t\tName:        pulumi.String(\"logs\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.clickhousedbops.Database;\nimport com.pulumi.clickhousedbops.DatabaseArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var logs = new Database(\"logs\", DatabaseArgs.builder()\n            .clusterName(\"cluster\")\n            .name(\"logs\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  logs:\n    type: clickhousedbops:Database\n    properties:\n      clusterName: cluster\n      name: logs\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nDatabases can be imported by specifying the UUID.\n\nFind the UUID of the database by checking system.databases table.\n\n```sh\n$ pulumi import clickhousedbops:index/database:Database example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\n```\n\nIt's also possible to import databases using the name:\n\n```sh\n$ pulumi import clickhousedbops:index/database:Database example databasename\n```\n\nIMPORTANT: if you have a multi node cluster, you need to specify the cluster name!\n\n```sh\n$ pulumi import clickhousedbops:index/database:Database example cluster:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\n```\n\n```sh\n$ pulumi import clickhousedbops:index/database:Database example cluster:databasename\n```\n\n",
             "properties": {
-                "sampleAttribute": {
+                "clusterName": {
                     "type": "string",
-                    "description": "Sample attribute.\n"
+                    "description": "Name of the cluster to create the database into. If omitted, the database will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nShould be set when hitting a cluster with more than one replica.\n"
+                },
+                "comment": {
+                    "type": "string",
+                    "description": "Comment associated with the database\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the database\n"
+                },
+                "uuid": {
+                    "type": "string",
+                    "description": "The system-assigned UUID for the database\n"
                 }
             },
+            "required": [
+                "name",
+                "uuid"
+            ],
             "inputProperties": {
-                "sampleAttribute": {
+                "clusterName": {
                     "type": "string",
-                    "description": "Sample attribute.\n"
+                    "description": "Name of the cluster to create the database into. If omitted, the database will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nShould be set when hitting a cluster with more than one replica.\n"
+                },
+                "comment": {
+                    "type": "string",
+                    "description": "Comment associated with the database\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the database\n"
                 }
             },
             "stateInputs": {
-                "description": "Input properties used for looking up and filtering Resource resources.\n",
+                "description": "Input properties used for looking up and filtering Database resources.\n",
                 "properties": {
-                    "sampleAttribute": {
+                    "clusterName": {
                         "type": "string",
-                        "description": "Sample attribute.\n"
+                        "description": "Name of the cluster to create the database into. If omitted, the database will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nShould be set when hitting a cluster with more than one replica.\n"
+                    },
+                    "comment": {
+                        "type": "string",
+                        "description": "Comment associated with the database\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the database\n"
+                    },
+                    "uuid": {
+                        "type": "string",
+                        "description": "The system-assigned UUID for the database\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "clickhousedbops:index/grantPrivilege:GrantPrivilege": {
+            "description": "## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as clickhousedbops from \"@pulumi/clickhousedbops\";\n\nconst grant = new clickhousedbops.GrantPrivilege(\"grant\", {\n    privilegeName: \"SELECT\",\n    databaseName: \"default\",\n    tableName: \"tbl1\",\n    columnName: \"count\",\n    granteeUserName: \"my_user_name\",\n    grantOption: true,\n});\n```\n```python\nimport pulumi\nimport pulumi_clickhousedbops as clickhousedbops\n\ngrant = clickhousedbops.GrantPrivilege(\"grant\",\n    privilege_name=\"SELECT\",\n    database_name=\"default\",\n    table_name=\"tbl1\",\n    column_name=\"count\",\n    grantee_user_name=\"my_user_name\",\n    grant_option=True)\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Clickhousedbops = Pulumi.Clickhousedbops;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var grant = new Clickhousedbops.GrantPrivilege(\"grant\", new()\n    {\n        PrivilegeName = \"SELECT\",\n        DatabaseName = \"default\",\n        TableName = \"tbl1\",\n        ColumnName = \"count\",\n        GranteeUserName = \"my_user_name\",\n        GrantOption = true,\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/LiHRaM/pulumi-clickhousedbops/sdk/go/clickhousedbops\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := clickhousedbops.NewGrantPrivilege(ctx, \"grant\", \u0026clickhousedbops.GrantPrivilegeArgs{\n\t\t\tPrivilegeName:   pulumi.String(\"SELECT\"),\n\t\t\tDatabaseName:    pulumi.String(\"default\"),\n\t\t\tTableName:       pulumi.String(\"tbl1\"),\n\t\t\tColumnName:      pulumi.String(\"count\"),\n\t\t\tGranteeUserName: pulumi.String(\"my_user_name\"),\n\t\t\tGrantOption:     pulumi.Bool(true),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.clickhousedbops.GrantPrivilege;\nimport com.pulumi.clickhousedbops.GrantPrivilegeArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var grant = new GrantPrivilege(\"grant\", GrantPrivilegeArgs.builder()\n            .privilegeName(\"SELECT\")\n            .databaseName(\"default\")\n            .tableName(\"tbl1\")\n            .columnName(\"count\")\n            .granteeUserName(\"my_user_name\")\n            .grantOption(true)\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  grant:\n    type: clickhousedbops:GrantPrivilege\n    properties:\n      privilegeName: SELECT\n      databaseName: default\n      tableName: tbl1\n      columnName: count\n      granteeUserName: my_user_name\n      grantOption: true\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
+            "properties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "columnName": {
+                    "type": "string",
+                    "description": "The name of the column in `table_name` to grant privilege on.\n"
+                },
+                "databaseName": {
+                    "type": "string",
+                    "description": "The name of the database to grant privilege on. Defaults to all databases if left null\n"
+                },
+                "grantOption": {
+                    "type": "boolean",
+                    "description": "If true, the grantee will be able to grant the same privileges to others.\n"
+                },
+                "granteeRoleName": {
+                    "type": "string",
+                    "description": "Name of the `role` to grant privileges to.\n"
+                },
+                "granteeUserName": {
+                    "type": "string",
+                    "description": "Name of the `user` to grant privileges to.\n"
+                },
+                "privilegeName": {
+                    "type": "string",
+                    "description": "The privilege to grant, such as `CREATE DATABASE`, `SELECT`, etc. See https://clickhouse.com/docs/en/sql-reference/statements/grant#privileges.\n"
+                },
+                "tableName": {
+                    "type": "string",
+                    "description": "The name of the table to grant privilege on.\n"
+                }
+            },
+            "required": [
+                "grantOption",
+                "privilegeName"
+            ],
+            "inputProperties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "columnName": {
+                    "type": "string",
+                    "description": "The name of the column in `table_name` to grant privilege on.\n"
+                },
+                "databaseName": {
+                    "type": "string",
+                    "description": "The name of the database to grant privilege on. Defaults to all databases if left null\n"
+                },
+                "grantOption": {
+                    "type": "boolean",
+                    "description": "If true, the grantee will be able to grant the same privileges to others.\n"
+                },
+                "granteeRoleName": {
+                    "type": "string",
+                    "description": "Name of the `role` to grant privileges to.\n"
+                },
+                "granteeUserName": {
+                    "type": "string",
+                    "description": "Name of the `user` to grant privileges to.\n"
+                },
+                "privilegeName": {
+                    "type": "string",
+                    "description": "The privilege to grant, such as `CREATE DATABASE`, `SELECT`, etc. See https://clickhouse.com/docs/en/sql-reference/statements/grant#privileges.\n"
+                },
+                "tableName": {
+                    "type": "string",
+                    "description": "The name of the table to grant privilege on.\n"
+                }
+            },
+            "requiredInputs": [
+                "privilegeName"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering GrantPrivilege resources.\n",
+                "properties": {
+                    "clusterName": {
+                        "type": "string",
+                        "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                    },
+                    "columnName": {
+                        "type": "string",
+                        "description": "The name of the column in `table_name` to grant privilege on.\n"
+                    },
+                    "databaseName": {
+                        "type": "string",
+                        "description": "The name of the database to grant privilege on. Defaults to all databases if left null\n"
+                    },
+                    "grantOption": {
+                        "type": "boolean",
+                        "description": "If true, the grantee will be able to grant the same privileges to others.\n"
+                    },
+                    "granteeRoleName": {
+                        "type": "string",
+                        "description": "Name of the `role` to grant privileges to.\n"
+                    },
+                    "granteeUserName": {
+                        "type": "string",
+                        "description": "Name of the `user` to grant privileges to.\n"
+                    },
+                    "privilegeName": {
+                        "type": "string",
+                        "description": "The privilege to grant, such as `CREATE DATABASE`, `SELECT`, etc. See https://clickhouse.com/docs/en/sql-reference/statements/grant#privileges.\n"
+                    },
+                    "tableName": {
+                        "type": "string",
+                        "description": "The name of the table to grant privilege on.\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "clickhousedbops:index/grantRole:GrantRole": {
+            "description": "## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as clickhousedbops from \"@pulumi/clickhousedbops\";\n\nconst roleToUser = new clickhousedbops.GrantRole(\"role_to_user\", {\n    clusterName: \"cluster\",\n    roleName: \"myrole\",\n    granteeUserName: \"myuser\",\n});\n```\n```python\nimport pulumi\nimport pulumi_clickhousedbops as clickhousedbops\n\nrole_to_user = clickhousedbops.GrantRole(\"role_to_user\",\n    cluster_name=\"cluster\",\n    role_name=\"myrole\",\n    grantee_user_name=\"myuser\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Clickhousedbops = Pulumi.Clickhousedbops;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var roleToUser = new Clickhousedbops.GrantRole(\"role_to_user\", new()\n    {\n        ClusterName = \"cluster\",\n        RoleName = \"myrole\",\n        GranteeUserName = \"myuser\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/LiHRaM/pulumi-clickhousedbops/sdk/go/clickhousedbops\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := clickhousedbops.NewGrantRole(ctx, \"role_to_user\", \u0026clickhousedbops.GrantRoleArgs{\n\t\t\tClusterName:     pulumi.String(\"cluster\"),\n\t\t\tRoleName:        pulumi.String(\"myrole\"),\n\t\t\tGranteeUserName: pulumi.String(\"myuser\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.clickhousedbops.GrantRole;\nimport com.pulumi.clickhousedbops.GrantRoleArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var roleToUser = new GrantRole(\"roleToUser\", GrantRoleArgs.builder()\n            .clusterName(\"cluster\")\n            .roleName(\"myrole\")\n            .granteeUserName(\"myuser\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  roleToUser:\n    type: clickhousedbops:GrantRole\n    name: role_to_user\n    properties:\n      clusterName: cluster\n      roleName: myrole\n      granteeUserName: myuser\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
+            "properties": {
+                "adminOption": {
+                    "type": "boolean",
+                    "description": "If true, the grantee will be able to grant `role_name` to other `users` or `roles`.\n"
+                },
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "granteeRoleName": {
+                    "type": "string",
+                    "description": "Name of the `role` to grant `role_name` to.\n"
+                },
+                "granteeUserName": {
+                    "type": "string",
+                    "description": "Name of the `user` to grant `role_name` to.\n"
+                },
+                "roleName": {
+                    "type": "string",
+                    "description": "Name of the role to be granted\n"
+                }
+            },
+            "required": [
+                "adminOption",
+                "roleName"
+            ],
+            "inputProperties": {
+                "adminOption": {
+                    "type": "boolean",
+                    "description": "If true, the grantee will be able to grant `role_name` to other `users` or `roles`.\n"
+                },
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "granteeRoleName": {
+                    "type": "string",
+                    "description": "Name of the `role` to grant `role_name` to.\n"
+                },
+                "granteeUserName": {
+                    "type": "string",
+                    "description": "Name of the `user` to grant `role_name` to.\n"
+                },
+                "roleName": {
+                    "type": "string",
+                    "description": "Name of the role to be granted\n"
+                }
+            },
+            "requiredInputs": [
+                "roleName"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering GrantRole resources.\n",
+                "properties": {
+                    "adminOption": {
+                        "type": "boolean",
+                        "description": "If true, the grantee will be able to grant `role_name` to other `users` or `roles`.\n"
+                    },
+                    "clusterName": {
+                        "type": "string",
+                        "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                    },
+                    "granteeRoleName": {
+                        "type": "string",
+                        "description": "Name of the `role` to grant `role_name` to.\n"
+                    },
+                    "granteeUserName": {
+                        "type": "string",
+                        "description": "Name of the `user` to grant `role_name` to.\n"
+                    },
+                    "roleName": {
+                        "type": "string",
+                        "description": "Name of the role to be granted\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "clickhousedbops:index/role:Role": {
+            "description": "You can use the `clickhousedbops.Role` resource to create a `role` in a `ClickHouse` instance.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as clickhousedbops from \"@pulumi/clickhousedbops\";\n\nconst writer = new clickhousedbops.Role(\"writer\", {\n    clusterName: \"cluster\",\n    name: \"writer\",\n});\n```\n```python\nimport pulumi\nimport pulumi_clickhousedbops as clickhousedbops\n\nwriter = clickhousedbops.Role(\"writer\",\n    cluster_name=\"cluster\",\n    name=\"writer\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Clickhousedbops = Pulumi.Clickhousedbops;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var writer = new Clickhousedbops.Role(\"writer\", new()\n    {\n        ClusterName = \"cluster\",\n        Name = \"writer\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/LiHRaM/pulumi-clickhousedbops/sdk/go/clickhousedbops\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := clickhousedbops.NewRole(ctx, \"writer\", \u0026clickhousedbops.RoleArgs{\n\t\t\tClusterName: pulumi.String(\"cluster\"),\n\t\t\tName:        pulumi.String(\"writer\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.clickhousedbops.Role;\nimport com.pulumi.clickhousedbops.RoleArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var writer = new Role(\"writer\", RoleArgs.builder()\n            .clusterName(\"cluster\")\n            .name(\"writer\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  writer:\n    type: clickhousedbops:Role\n    properties:\n      clusterName: cluster\n      name: writer\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nRoles can be imported by specifying the ID.\n\nFind the ID of the role by checking system.roles table.\n\n```sh\n$ pulumi import clickhousedbops:index/role:Role example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\n```\n\nIt's also possible to import roles by name:\n\n```sh\n$ pulumi import clickhousedbops:index/role:Role example rolename\n```\n\nIMPORTANT: if you have a multi node cluster, you need to specify the cluster name!\n\n```sh\n$ pulumi import clickhousedbops:index/role:Role example cluster:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\n```\n\n```sh\n$ pulumi import clickhousedbops:index/role:Role example cluster:rolename\n```\n\n",
+            "properties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the role\n"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "inputProperties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the role\n"
+                }
+            },
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering Role resources.\n",
+                "properties": {
+                    "clusterName": {
+                        "type": "string",
+                        "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the role\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "clickhousedbops:index/setting:Setting": {
+            "description": "You can use the `clickhousedbops.Setting` resource to manage the single `settings` of a `Setting Profile` in a `ClickHouse` instance.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as clickhousedbops from \"@pulumi/clickhousedbops\";\n\nconst setting1 = new clickhousedbops.Setting(\"setting1\", {\n    settingsProfileId: profile1.id,\n    name: \"max_memory_usage\",\n    value: \"1000\",\n    min: \"100\",\n    max: \"2000\",\n    writability: \"CHANGEABLE_IN_READONLY\",\n});\n```\n```python\nimport pulumi\nimport pulumi_clickhousedbops as clickhousedbops\n\nsetting1 = clickhousedbops.Setting(\"setting1\",\n    settings_profile_id=profile1[\"id\"],\n    name=\"max_memory_usage\",\n    value=\"1000\",\n    min=\"100\",\n    max=\"2000\",\n    writability=\"CHANGEABLE_IN_READONLY\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Clickhousedbops = Pulumi.Clickhousedbops;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var setting1 = new Clickhousedbops.Setting(\"setting1\", new()\n    {\n        SettingsProfileId = profile1.Id,\n        Name = \"max_memory_usage\",\n        Value = \"1000\",\n        Min = \"100\",\n        Max = \"2000\",\n        Writability = \"CHANGEABLE_IN_READONLY\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/LiHRaM/pulumi-clickhousedbops/sdk/go/clickhousedbops\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := clickhousedbops.NewSetting(ctx, \"setting1\", \u0026clickhousedbops.SettingArgs{\n\t\t\tSettingsProfileId: pulumi.Any(profile1.Id),\n\t\t\tName:              pulumi.String(\"max_memory_usage\"),\n\t\t\tValue:             pulumi.String(\"1000\"),\n\t\t\tMin:               pulumi.String(\"100\"),\n\t\t\tMax:               pulumi.String(\"2000\"),\n\t\t\tWritability:       pulumi.String(\"CHANGEABLE_IN_READONLY\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.clickhousedbops.Setting;\nimport com.pulumi.clickhousedbops.SettingArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var setting1 = new Setting(\"setting1\", SettingArgs.builder()\n            .settingsProfileId(profile1.id())\n            .name(\"max_memory_usage\")\n            .value(\"1000\")\n            .min(\"100\")\n            .max(\"2000\")\n            .writability(\"CHANGEABLE_IN_READONLY\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  setting1:\n    type: clickhousedbops:Setting\n    properties:\n      settingsProfileId: ${profile1.id}\n      name: max_memory_usage\n      value: 1000\n      min: '100'\n      max: '2000'\n      writability: CHANGEABLE_IN_READONLY\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
+            "properties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "max": {
+                    "type": "string",
+                    "description": "Max Value for the setting\n"
+                },
+                "min": {
+                    "type": "string",
+                    "description": "Min Value for the setting\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the setting\n"
+                },
+                "settingsProfileId": {
+                    "type": "string",
+                    "description": "ID of the settings profile\n"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Value for the setting\n"
+                },
+                "writability": {
+                    "type": "string",
+                    "description": "Writability attribute for the setting\n"
+                }
+            },
+            "required": [
+                "name",
+                "settingsProfileId"
+            ],
+            "inputProperties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "max": {
+                    "type": "string",
+                    "description": "Max Value for the setting\n"
+                },
+                "min": {
+                    "type": "string",
+                    "description": "Min Value for the setting\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the setting\n"
+                },
+                "settingsProfileId": {
+                    "type": "string",
+                    "description": "ID of the settings profile\n"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "Value for the setting\n"
+                },
+                "writability": {
+                    "type": "string",
+                    "description": "Writability attribute for the setting\n"
+                }
+            },
+            "requiredInputs": [
+                "settingsProfileId"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering Setting resources.\n",
+                "properties": {
+                    "clusterName": {
+                        "type": "string",
+                        "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                    },
+                    "max": {
+                        "type": "string",
+                        "description": "Max Value for the setting\n"
+                    },
+                    "min": {
+                        "type": "string",
+                        "description": "Min Value for the setting\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the setting\n"
+                    },
+                    "settingsProfileId": {
+                        "type": "string",
+                        "description": "ID of the settings profile\n"
+                    },
+                    "value": {
+                        "type": "string",
+                        "description": "Value for the setting\n"
+                    },
+                    "writability": {
+                        "type": "string",
+                        "description": "Writability attribute for the setting\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "clickhousedbops:index/settingsProfile:SettingsProfile": {
+            "description": "You can use the `clickhousedbops.SettingsProfile` resource to create a `Setting Profile` in a `ClickHouse` instance.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as clickhousedbops from \"@pulumi/clickhousedbops\";\n\nconst profile1 = new clickhousedbops.SettingsProfile(\"profile1\", {\n    clusterName: \"cluster\",\n    name: \"profile1\",\n});\n```\n```python\nimport pulumi\nimport pulumi_clickhousedbops as clickhousedbops\n\nprofile1 = clickhousedbops.SettingsProfile(\"profile1\",\n    cluster_name=\"cluster\",\n    name=\"profile1\")\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Clickhousedbops = Pulumi.Clickhousedbops;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var profile1 = new Clickhousedbops.SettingsProfile(\"profile1\", new()\n    {\n        ClusterName = \"cluster\",\n        Name = \"profile1\",\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/LiHRaM/pulumi-clickhousedbops/sdk/go/clickhousedbops\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := clickhousedbops.NewSettingsProfile(ctx, \"profile1\", \u0026clickhousedbops.SettingsProfileArgs{\n\t\t\tClusterName: pulumi.String(\"cluster\"),\n\t\t\tName:        pulumi.String(\"profile1\"),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.clickhousedbops.SettingsProfile;\nimport com.pulumi.clickhousedbops.SettingsProfileArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var profile1 = new SettingsProfile(\"profile1\", SettingsProfileArgs.builder()\n            .clusterName(\"cluster\")\n            .name(\"profile1\")\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  profile1:\n    type: clickhousedbops:SettingsProfile\n    properties:\n      clusterName: cluster\n      name: profile1\n```\n\u003c!--End PulumiCodeChooser --\u003e\n\n## Import\n\nSettings profiles can be imported by specifying the UUID.\n\nFind the ID of the settings profile by checking system.settings_profiles table.\n\n```sh\n$ pulumi import clickhousedbops:index/settingsProfile:SettingsProfile example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\n```\n\nIt's also possible to import settings profiles by name:\n\n```sh\n$ pulumi import clickhousedbops:index/settingsProfile:SettingsProfile example name\n```\n\nIMPORTANT: if you have a multi node cluster, you need to specify the cluster name!\n\n```sh\n$ pulumi import clickhousedbops:index/settingsProfile:SettingsProfile example cluster:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\n```\n\n```sh\n$ pulumi import clickhousedbops:index/settingsProfile:SettingsProfile example cluster:name\n```\n\n",
+            "properties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "inheritFroms": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of setting profile names to inherit from\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the settings profile\n"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "inputProperties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "inheritFroms": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of setting profile names to inherit from\n"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the settings profile\n"
+                }
+            },
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering SettingsProfile resources.\n",
+                "properties": {
+                    "clusterName": {
+                        "type": "string",
+                        "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                    },
+                    "inheritFroms": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of setting profile names to inherit from\n"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the settings profile\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "clickhousedbops:index/settingsProfileAssociation:SettingsProfileAssociation": {
+            "description": "You can use the `clickhousedbops.SettingsProfileAssociation` resource to associate a `settings_profile` to a `role` or `user` in a `ClickHouse` instance.\n\n## Example Usage\n\n\u003c!--Start PulumiCodeChooser --\u003e\n```typescript\nimport * as pulumi from \"@pulumi/pulumi\";\nimport * as clickhousedbops from \"@pulumi/clickhousedbops\";\n\nconst roleassociation = new clickhousedbops.SettingsProfileAssociation(\"roleassociation\", {\n    settingsProfileId: profile1.id,\n    roleId: role1.id,\n});\n```\n```python\nimport pulumi\nimport pulumi_clickhousedbops as clickhousedbops\n\nroleassociation = clickhousedbops.SettingsProfileAssociation(\"roleassociation\",\n    settings_profile_id=profile1[\"id\"],\n    role_id=role1[\"id\"])\n```\n```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Pulumi;\nusing Clickhousedbops = Pulumi.Clickhousedbops;\n\nreturn await Deployment.RunAsync(() =\u003e \n{\n    var roleassociation = new Clickhousedbops.SettingsProfileAssociation(\"roleassociation\", new()\n    {\n        SettingsProfileId = profile1.Id,\n        RoleId = role1.Id,\n    });\n\n});\n```\n```go\npackage main\n\nimport (\n\t\"github.com/LiHRaM/pulumi-clickhousedbops/sdk/go/clickhousedbops\"\n\t\"github.com/pulumi/pulumi/sdk/v3/go/pulumi\"\n)\n\nfunc main() {\n\tpulumi.Run(func(ctx *pulumi.Context) error {\n\t\t_, err := clickhousedbops.NewSettingsProfileAssociation(ctx, \"roleassociation\", \u0026clickhousedbops.SettingsProfileAssociationArgs{\n\t\t\tSettingsProfileId: pulumi.Any(profile1.Id),\n\t\t\tRoleId:            pulumi.Any(role1.Id),\n\t\t})\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\treturn nil\n\t})\n}\n```\n```java\npackage generated_program;\n\nimport com.pulumi.Context;\nimport com.pulumi.Pulumi;\nimport com.pulumi.core.Output;\nimport com.pulumi.clickhousedbops.SettingsProfileAssociation;\nimport com.pulumi.clickhousedbops.SettingsProfileAssociationArgs;\nimport java.util.List;\nimport java.util.ArrayList;\nimport java.util.Map;\nimport java.io.File;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic class App {\n    public static void main(String[] args) {\n        Pulumi.run(App::stack);\n    }\n\n    public static void stack(Context ctx) {\n        var roleassociation = new SettingsProfileAssociation(\"roleassociation\", SettingsProfileAssociationArgs.builder()\n            .settingsProfileId(profile1.id())\n            .roleId(role1.id())\n            .build());\n\n    }\n}\n```\n```yaml\nresources:\n  roleassociation:\n    type: clickhousedbops:SettingsProfileAssociation\n    properties:\n      settingsProfileId: ${profile1.id}\n      roleId: ${role1.id}\n```\n\u003c!--End PulumiCodeChooser --\u003e\n",
+            "properties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "roleId": {
+                    "type": "string",
+                    "description": "ID of the SettingsProfileAssociation to associate the Settings profile to\n"
+                },
+                "settingsProfileId": {
+                    "type": "string",
+                    "description": "ID of the settings profile to associate\n"
+                },
+                "userId": {
+                    "type": "string",
+                    "description": "ID of the User to associate the Settings profile to\n"
+                }
+            },
+            "required": [
+                "settingsProfileId"
+            ],
+            "inputProperties": {
+                "clusterName": {
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                },
+                "roleId": {
+                    "type": "string",
+                    "description": "ID of the SettingsProfileAssociation to associate the Settings profile to\n"
+                },
+                "settingsProfileId": {
+                    "type": "string",
+                    "description": "ID of the settings profile to associate\n"
+                },
+                "userId": {
+                    "type": "string",
+                    "description": "ID of the User to associate the Settings profile to\n"
+                }
+            },
+            "requiredInputs": [
+                "settingsProfileId"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering SettingsProfileAssociation resources.\n",
+                "properties": {
+                    "clusterName": {
+                        "type": "string",
+                        "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster.\nWhen using a self hosted ClickHouse instance, this field should only be set when there is more than one replica and you are not using 'replicated' storage for user_directory.\n"
+                    },
+                    "roleId": {
+                        "type": "string",
+                        "description": "ID of the SettingsProfileAssociation to associate the Settings profile to\n"
+                    },
+                    "settingsProfileId": {
+                        "type": "string",
+                        "description": "ID of the settings profile to associate\n"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "description": "ID of the User to associate the Settings profile to\n"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "clickhousedbops:index/user:User": {
+            "properties": {
+                "clusterName": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "passwordSha256HashWoVersion": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "name",
+                "passwordSha256HashWoVersion"
+            ],
+            "inputProperties": {
+                "clusterName": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "passwordSha256HashWoVersion": {
+                    "type": "integer"
+                }
+            },
+            "requiredInputs": [
+                "passwordSha256HashWoVersion"
+            ],
+            "stateInputs": {
+                "properties": {
+                    "clusterName": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "passwordSha256HashWoVersion": {
+                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -114,16 +784,16 @@
         }
     },
     "functions": {
-        "pulumi:providers:xyz/terraformConfig": {
+        "pulumi:providers:clickhousedbops/terraformConfig": {
             "description": "This function returns a Terraform config object with terraform-namecased keys,to be used with the Terraform Module Provider.",
             "inputs": {
                 "properties": {
                     "__self__": {
                         "type": "ref",
-                        "$ref": "#/resources/pulumi:providers:xyz"
+                        "$ref": "#/resources/pulumi:providers:clickhousedbops"
                     }
                 },
-                "type": "pulumi:providers:xyz/terraformConfig",
+                "type": "pulumi:providers:clickhousedbops/terraformConfig",
                 "required": [
                     "__self__"
                 ]
@@ -139,37 +809,6 @@
                 },
                 "required": [
                     "result"
-                ],
-                "type": "object"
-            }
-        },
-        "xyz:index/getDataSource:getDataSource": {
-            "inputs": {
-                "description": "A collection of arguments for invoking getDataSource.\n",
-                "properties": {
-                    "sampleAttribute": {
-                        "type": "string"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "sampleAttribute"
-                ]
-            },
-            "outputs": {
-                "description": "A collection of values returned by getDataSource.\n",
-                "properties": {
-                    "id": {
-                        "description": "The provider-assigned unique ID for this managed resource.\n",
-                        "type": "string"
-                    },
-                    "sampleAttribute": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "sampleAttribute",
-                    "id"
                 ],
                 "type": "object"
             }
