@@ -190,6 +190,20 @@ class User(pulumi.CustomResource):
         - Changing the user's password as described above will cause the database user to be deleted and recreated.
         - When importing an existing user, the `User` resource will be lacking the `password_sha256_hash_wo_version` and thus the subsequent apply will need to recreate the database User in order to set a password.
 
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_clickhousedbops as clickhousedbops
+        import pulumi_std as std
+
+        john = clickhousedbops.User("john",
+            cluster_name="cluster",
+            name="john",
+            password_sha256_hash_wo=std.sha256(input="test").result,
+            password_sha256_hash_wo_version=4)
+        ```
+
         ## Import
 
         Users can be imported by specifying the ID.
@@ -242,6 +256,20 @@ class User(pulumi.CustomResource):
         - Changing the `password_sha256_hash_wo` field alone does not have any effect. In order to change the password of a user, you also need to bump `password_sha256_hash_wo_version` field.
         - Changing the user's password as described above will cause the database user to be deleted and recreated.
         - When importing an existing user, the `User` resource will be lacking the `password_sha256_hash_wo_version` and thus the subsequent apply will need to recreate the database User in order to set a password.
+
+        ## Example Usage
+
+        ```python
+        import pulumi
+        import pulumi_clickhousedbops as clickhousedbops
+        import pulumi_std as std
+
+        john = clickhousedbops.User("john",
+            cluster_name="cluster",
+            name="john",
+            password_sha256_hash_wo=std.sha256(input="test").result,
+            password_sha256_hash_wo_version=4)
+        ```
 
         ## Import
 

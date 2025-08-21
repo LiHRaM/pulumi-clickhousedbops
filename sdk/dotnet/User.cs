@@ -18,6 +18,31 @@ namespace Pulumi.Clickhousedbops
     /// - Changing the user's password as described above will cause the database user to be deleted and recreated.
     /// - When importing an existing user, the `clickhousedbops.User` resource will be lacking the `password_sha256_hash_wo_version` and thus the subsequent apply will need to recreate the database User in order to set a password.
     /// 
+    /// ## Example Usage
+    /// 
+    /// ```csharp
+    /// using System.Collections.Generic;
+    /// using System.Linq;
+    /// using Pulumi;
+    /// using Clickhousedbops = Pulumi.Clickhousedbops;
+    /// using Std = Pulumi.Std;
+    /// 
+    /// return await Deployment.RunAsync(() =&gt; 
+    /// {
+    ///     var john = new Clickhousedbops.User("john", new()
+    ///     {
+    ///         ClusterName = "cluster",
+    ///         Name = "john",
+    ///         PasswordSha256HashWo = Std.Sha256.Invoke(new()
+    ///         {
+    ///             Input = "test",
+    ///         }).Apply(invoke =&gt; invoke.Result),
+    ///         PasswordSha256HashWoVersion = 4,
+    ///     });
+    /// 
+    /// });
+    /// ```
+    /// 
     /// ## Import
     /// 
     /// Users can be imported by specifying the ID.

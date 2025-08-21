@@ -20,6 +20,42 @@ import (
 // - Changing the user's password as described above will cause the database user to be deleted and recreated.
 // - When importing an existing user, the `User` resource will be lacking the `passwordSha256HashWoVersion` and thus the subsequent apply will need to recreate the database User in order to set a password.
 //
+// ## Example Usage
+//
+// ```go
+// package main
+//
+// import (
+//
+//	"github.com/LiHRaM/pulumi-clickhousedbops/sdk/go/clickhousedbops"
+//	"github.com/pulumi/pulumi-std/sdk/go/std"
+//	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+//
+// )
+//
+//	func main() {
+//		pulumi.Run(func(ctx *pulumi.Context) error {
+//			invokeSha256, err := std.Sha256(ctx, &std.Sha256Args{
+//				Input: "test",
+//			}, nil)
+//			if err != nil {
+//				return err
+//			}
+//			_, err = clickhousedbops.NewUser(ctx, "john", &clickhousedbops.UserArgs{
+//				ClusterName:                 pulumi.String("cluster"),
+//				Name:                        pulumi.String("john"),
+//				PasswordSha256HashWo:        pulumi.String(invokeSha256.Result),
+//				PasswordSha256HashWoVersion: pulumi.Int(4),
+//			})
+//			if err != nil {
+//				return err
+//			}
+//			return nil
+//		})
+//	}
+//
+// ```
+//
 // ## Import
 //
 // Users can be imported by specifying the ID.

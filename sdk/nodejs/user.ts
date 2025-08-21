@@ -13,6 +13,23 @@ import * as utilities from "./utilities";
  * - Changing the user's password as described above will cause the database user to be deleted and recreated.
  * - When importing an existing user, the `clickhousedbops.User` resource will be lacking the `passwordSha256HashWoVersion` and thus the subsequent apply will need to recreate the database User in order to set a password.
  *
+ * ## Example Usage
+ *
+ * ```typescript
+ * import * as pulumi from "@pulumi/pulumi";
+ * import * as clickhousedbops from "@pulumi/clickhousedbops";
+ * import * as std from "@pulumi/std";
+ *
+ * const john = new clickhousedbops.User("john", {
+ *     clusterName: "cluster",
+ *     name: "john",
+ *     passwordSha256HashWo: std.sha256({
+ *         input: "test",
+ *     }).then(invoke => invoke.result),
+ *     passwordSha256HashWoVersion: 4,
+ * });
+ * ```
+ *
  * ## Import
  *
  * Users can be imported by specifying the ID.
