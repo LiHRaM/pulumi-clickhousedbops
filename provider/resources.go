@@ -182,13 +182,6 @@ func Provider() tfbridge.ProviderInfo {
 			"clickhousedbops_setting":                      {ComputeID: autoNameByProperties},
 			"clickhousedbops_settings_profile_association": {ComputeID: autoNameByProperties},
 			"clickhousedbops_database":                     {ComputeID: delegateID("uuid")},
-			"clickhousedbops_user": {
-				Fields: map[string]*tfbridge.SchemaInfo{
-					"password_sha256_hash_wo": {
-						MarkAsOptional: &[]bool{true}[0],
-					},
-				},
-			},
 		},
 	}
 

@@ -745,12 +745,16 @@
                 "name": {
                     "type": "string"
                 },
+                "passwordSha256HashWo": {
+                    "type": "string"
+                },
                 "passwordSha256HashWoVersion": {
                     "type": "integer"
                 }
             },
             "required": [
                 "name",
+                "passwordSha256HashWo",
                 "passwordSha256HashWoVersion"
             ],
             "inputProperties": {
@@ -760,11 +764,15 @@
                 "name": {
                     "type": "string"
                 },
+                "passwordSha256HashWo": {
+                    "type": "string"
+                },
                 "passwordSha256HashWoVersion": {
                     "type": "integer"
                 }
             },
             "requiredInputs": [
+                "passwordSha256HashWo",
                 "passwordSha256HashWoVersion"
             ],
             "stateInputs": {
@@ -773,6 +781,9 @@
                         "type": "string"
                     },
                     "name": {
+                        "type": "string"
+                    },
+                    "passwordSha256HashWo": {
                         "type": "string"
                     },
                     "passwordSha256HashWoVersion": {
@@ -790,7 +801,7 @@
                 "properties": {
                     "__self__": {
                         "type": "ref",
-                        "$ref": "#/resources/pulumi:providers:clickhousedbops"
+                        "$ref": "#/provider"
                     }
                 },
                 "type": "pulumi:providers:clickhousedbops/terraformConfig",
