@@ -4,6 +4,43 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
+/**
+ * You can use the `clickhousedbops.User` resource to create a user in a `ClickHouse` instance.
+ *
+ * Known limitations:
+ *
+ * - Changing the `passwordSha256HashWo` field alone does not have any effect. In order to change the password of a user, you also need to bump `passwordSha256HashWoVersion` field.
+ * - Changing the user's password as described above will cause the database user to be deleted and recreated.
+ * - When importing an existing user, the `clickhousedbops.User` resource will be lacking the `passwordSha256HashWoVersion` and thus the subsequent apply will need to recreate the database User in order to set a password.
+ *
+ * ## Import
+ *
+ * Users can be imported by specifying the ID.
+ *
+ * Find the ID of the user by checking system.users table.
+ *
+ * WARNING: imported users will be recreated during first 'pulumi up' because the password cannot be imported.
+ *
+ * ```sh
+ * $ pulumi import clickhousedbops:index/user:User example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+ * ```
+ *
+ * It's also possible to import users using the username:
+ *
+ * ```sh
+ * $ pulumi import clickhousedbops:index/user:User example username
+ * ```
+ *
+ * IMPORTANT: if you have a multi node cluster, you need to specify the cluster name!
+ *
+ * ```sh
+ * $ pulumi import clickhousedbops:index/user:User example cluster:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+ * ```
+ *
+ * ```sh
+ * $ pulumi import clickhousedbops:index/user:User example cluster:username
+ * ```
+ */
 export class User extends pulumi.CustomResource {
     /**
      * Get an existing User resource's state with the given name, ID, and optional extra
@@ -32,8 +69,24 @@ export class User extends pulumi.CustomResource {
         return obj['__pulumiType'] === User.__pulumiType;
     }
 
+    /**
+     * Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+     * This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+     * field should only be set when there is more than one replica and you are not using 'replicated' storage for
+     * user_directory.
+     */
     public readonly clusterName!: pulumi.Output<string | undefined>;
+    /**
+     * Name of the user
+     */
     public readonly name!: pulumi.Output<string>;
+    /**
+     * SHA256 hash of the password to be set for the user
+     */
+    public readonly passwordSha256HashWo!: pulumi.Output<string>;
+    /**
+     * Version of the passwordSha256HashWo field. Bump this value to require a force update of the password on the user.
+     */
     public readonly passwordSha256HashWoVersion!: pulumi.Output<number>;
 
     /**
@@ -51,14 +104,19 @@ export class User extends pulumi.CustomResource {
             const state = argsOrState as UserState | undefined;
             resourceInputs["clusterName"] = state ? state.clusterName : undefined;
             resourceInputs["name"] = state ? state.name : undefined;
+            resourceInputs["passwordSha256HashWo"] = state ? state.passwordSha256HashWo : undefined;
             resourceInputs["passwordSha256HashWoVersion"] = state ? state.passwordSha256HashWoVersion : undefined;
         } else {
             const args = argsOrState as UserArgs | undefined;
+            if ((!args || args.passwordSha256HashWo === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'passwordSha256HashWo'");
+            }
             if ((!args || args.passwordSha256HashWoVersion === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'passwordSha256HashWoVersion'");
             }
             resourceInputs["clusterName"] = args ? args.clusterName : undefined;
             resourceInputs["name"] = args ? args.name : undefined;
+            resourceInputs["passwordSha256HashWo"] = args ? args.passwordSha256HashWo : undefined;
             resourceInputs["passwordSha256HashWoVersion"] = args ? args.passwordSha256HashWoVersion : undefined;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -66,9 +124,28 @@ export class User extends pulumi.CustomResource {
     }
 }
 
+/**
+ * Input properties used for looking up and filtering User resources.
+ */
 export interface UserState {
+    /**
+     * Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+     * This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+     * field should only be set when there is more than one replica and you are not using 'replicated' storage for
+     * user_directory.
+     */
     clusterName?: pulumi.Input<string>;
+    /**
+     * Name of the user
+     */
     name?: pulumi.Input<string>;
+    /**
+     * SHA256 hash of the password to be set for the user
+     */
+    passwordSha256HashWo?: pulumi.Input<string>;
+    /**
+     * Version of the passwordSha256HashWo field. Bump this value to require a force update of the password on the user.
+     */
     passwordSha256HashWoVersion?: pulumi.Input<number>;
 }
 
@@ -76,7 +153,23 @@ export interface UserState {
  * The set of arguments for constructing a User resource.
  */
 export interface UserArgs {
+    /**
+     * Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+     * This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+     * field should only be set when there is more than one replica and you are not using 'replicated' storage for
+     * user_directory.
+     */
     clusterName?: pulumi.Input<string>;
+    /**
+     * Name of the user
+     */
     name?: pulumi.Input<string>;
+    /**
+     * SHA256 hash of the password to be set for the user
+     */
+    passwordSha256HashWo: pulumi.Input<string>;
+    /**
+     * Version of the passwordSha256HashWo field. Bump this value to require a force update of the password on the user.
+     */
     passwordSha256HashWoVersion: pulumi.Input<number>;
 }

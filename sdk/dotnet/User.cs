@@ -9,15 +9,70 @@ using Pulumi.Serialization;
 
 namespace Pulumi.Clickhousedbops
 {
+    /// <summary>
+    /// You can use the `clickhousedbops.User` resource to create a user in a `ClickHouse` instance.
+    /// 
+    /// Known limitations:
+    /// 
+    /// - Changing the `password_sha256_hash_wo` field alone does not have any effect. In order to change the password of a user, you also need to bump `password_sha256_hash_wo_version` field.
+    /// - Changing the user's password as described above will cause the database user to be deleted and recreated.
+    /// - When importing an existing user, the `clickhousedbops.User` resource will be lacking the `password_sha256_hash_wo_version` and thus the subsequent apply will need to recreate the database User in order to set a password.
+    /// 
+    /// ## Import
+    /// 
+    /// Users can be imported by specifying the ID.
+    /// 
+    /// Find the ID of the user by checking system.users table.
+    /// 
+    /// WARNING: imported users will be recreated during first 'pulumi up' because the password cannot be imported.
+    /// 
+    /// ```sh
+    /// $ pulumi import clickhousedbops:index/user:User example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    /// ```
+    /// 
+    /// It's also possible to import users using the username:
+    /// 
+    /// ```sh
+    /// $ pulumi import clickhousedbops:index/user:User example username
+    /// ```
+    /// 
+    /// IMPORTANT: if you have a multi node cluster, you need to specify the cluster name!
+    /// 
+    /// ```sh
+    /// $ pulumi import clickhousedbops:index/user:User example cluster:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    /// ```
+    /// 
+    /// ```sh
+    /// $ pulumi import clickhousedbops:index/user:User example cluster:username
+    /// ```
+    /// </summary>
     [ClickhousedbopsResourceType("clickhousedbops:index/user:User")]
     public partial class User : global::Pulumi.CustomResource
     {
+        /// <summary>
+        /// Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+        /// This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+        /// field should only be set when there is more than one replica and you are not using 'replicated' storage for
+        /// user_directory.
+        /// </summary>
         [Output("clusterName")]
         public Output<string?> ClusterName { get; private set; } = null!;
 
+        /// <summary>
+        /// Name of the user
+        /// </summary>
         [Output("name")]
         public Output<string> Name { get; private set; } = null!;
 
+        /// <summary>
+        /// SHA256 hash of the password to be set for the user
+        /// </summary>
+        [Output("passwordSha256HashWo")]
+        public Output<string> PasswordSha256HashWo { get; private set; } = null!;
+
+        /// <summary>
+        /// Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
+        /// </summary>
         [Output("passwordSha256HashWoVersion")]
         public Output<int> PasswordSha256HashWoVersion { get; private set; } = null!;
 
@@ -67,12 +122,30 @@ namespace Pulumi.Clickhousedbops
 
     public sealed class UserArgs : global::Pulumi.ResourceArgs
     {
+        /// <summary>
+        /// Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+        /// This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+        /// field should only be set when there is more than one replica and you are not using 'replicated' storage for
+        /// user_directory.
+        /// </summary>
         [Input("clusterName")]
         public Input<string>? ClusterName { get; set; }
 
+        /// <summary>
+        /// Name of the user
+        /// </summary>
         [Input("name")]
         public Input<string>? Name { get; set; }
 
+        /// <summary>
+        /// SHA256 hash of the password to be set for the user
+        /// </summary>
+        [Input("passwordSha256HashWo", required: true)]
+        public Input<string> PasswordSha256HashWo { get; set; } = null!;
+
+        /// <summary>
+        /// Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
+        /// </summary>
         [Input("passwordSha256HashWoVersion", required: true)]
         public Input<int> PasswordSha256HashWoVersion { get; set; } = null!;
 
@@ -84,12 +157,30 @@ namespace Pulumi.Clickhousedbops
 
     public sealed class UserState : global::Pulumi.ResourceArgs
     {
+        /// <summary>
+        /// Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+        /// This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+        /// field should only be set when there is more than one replica and you are not using 'replicated' storage for
+        /// user_directory.
+        /// </summary>
         [Input("clusterName")]
         public Input<string>? ClusterName { get; set; }
 
+        /// <summary>
+        /// Name of the user
+        /// </summary>
         [Input("name")]
         public Input<string>? Name { get; set; }
 
+        /// <summary>
+        /// SHA256 hash of the password to be set for the user
+        /// </summary>
+        [Input("passwordSha256HashWo")]
+        public Input<string>? PasswordSha256HashWo { get; set; }
+
+        /// <summary>
+        /// Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
+        /// </summary>
         [Input("passwordSha256HashWoVersion")]
         public Input<int>? PasswordSha256HashWoVersion { get; set; }
 

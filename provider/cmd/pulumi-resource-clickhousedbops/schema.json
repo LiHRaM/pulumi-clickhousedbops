@@ -738,18 +738,23 @@
             }
         },
         "clickhousedbops:index/user:User": {
+            "description": "You can use the `clickhousedbops.User` resource to create a user in a `ClickHouse` instance.\n\nKnown limitations:\n\n- Changing the `password_sha256_hash_wo` field alone does not have any effect. In order to change the password of a user, you also need to bump `password_sha256_hash_wo_version` field.\n- Changing the user's password as described above will cause the database user to be deleted and recreated.\n- When importing an existing user, the `clickhousedbops.User` resource will be lacking the `password_sha256_hash_wo_version` and thus the subsequent apply will need to recreate the database User in order to set a password.\n\n## Import\n\nUsers can be imported by specifying the ID.\n\nFind the ID of the user by checking system.users table.\n\nWARNING: imported users will be recreated during first 'pulumi up' because the password cannot be imported.\n\n```sh\n$ pulumi import clickhousedbops:index/user:User example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\n```\n\nIt's also possible to import users using the username:\n\n```sh\n$ pulumi import clickhousedbops:index/user:User example username\n```\n\nIMPORTANT: if you have a multi node cluster, you need to specify the cluster name!\n\n```sh\n$ pulumi import clickhousedbops:index/user:User example cluster:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\n```\n\n```sh\n$ pulumi import clickhousedbops:index/user:User example cluster:username\n```\n\n",
             "properties": {
                 "clusterName": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this\nfield should only be set when there is more than one replica and you are not using 'replicated' storage for\nuser_directory.\n"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Name of the user\n"
                 },
                 "passwordSha256HashWo": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "SHA256 hash of the password to be set for the user\n"
                 },
                 "passwordSha256HashWoVersion": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.\n"
                 }
             },
             "required": [
@@ -759,16 +764,20 @@
             ],
             "inputProperties": {
                 "clusterName": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this\nfield should only be set when there is more than one replica and you are not using 'replicated' storage for\nuser_directory.\n"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Name of the user\n"
                 },
                 "passwordSha256HashWo": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "SHA256 hash of the password to be set for the user\n"
                 },
                 "passwordSha256HashWoVersion": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.\n"
                 }
             },
             "requiredInputs": [
@@ -776,18 +785,23 @@
                 "passwordSha256HashWoVersion"
             ],
             "stateInputs": {
+                "description": "Input properties used for looking up and filtering User resources.\n",
                 "properties": {
                     "clusterName": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.\nThis field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this\nfield should only be set when there is more than one replica and you are not using 'replicated' storage for\nuser_directory.\n"
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "Name of the user\n"
                     },
                     "passwordSha256HashWo": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "SHA256 hash of the password to be set for the user\n"
                     },
                     "passwordSha256HashWoVersion": {
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.\n"
                     }
                 },
                 "type": "object"

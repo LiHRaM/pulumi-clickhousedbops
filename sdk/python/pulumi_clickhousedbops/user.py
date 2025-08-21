@@ -19,12 +19,21 @@ __all__ = ['UserArgs', 'User']
 @pulumi.input_type
 class UserArgs:
     def __init__(__self__, *,
+                 password_sha256_hash_wo: pulumi.Input[_builtins.str],
                  password_sha256_hash_wo_version: pulumi.Input[_builtins.int],
                  cluster_name: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a User resource.
+        :param pulumi.Input[_builtins.str] password_sha256_hash_wo: SHA256 hash of the password to be set for the user
+        :param pulumi.Input[_builtins.int] password_sha256_hash_wo_version: Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
+        :param pulumi.Input[_builtins.str] cluster_name: Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+               This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+               field should only be set when there is more than one replica and you are not using 'replicated' storage for
+               user_directory.
+        :param pulumi.Input[_builtins.str] name: Name of the user
         """
+        pulumi.set(__self__, "password_sha256_hash_wo", password_sha256_hash_wo)
         pulumi.set(__self__, "password_sha256_hash_wo_version", password_sha256_hash_wo_version)
         if cluster_name is not None:
             pulumi.set(__self__, "cluster_name", cluster_name)
@@ -32,8 +41,23 @@ class UserArgs:
             pulumi.set(__self__, "name", name)
 
     @_builtins.property
+    @pulumi.getter(name="passwordSha256HashWo")
+    def password_sha256_hash_wo(self) -> pulumi.Input[_builtins.str]:
+        """
+        SHA256 hash of the password to be set for the user
+        """
+        return pulumi.get(self, "password_sha256_hash_wo")
+
+    @password_sha256_hash_wo.setter
+    def password_sha256_hash_wo(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "password_sha256_hash_wo", value)
+
+    @_builtins.property
     @pulumi.getter(name="passwordSha256HashWoVersion")
     def password_sha256_hash_wo_version(self) -> pulumi.Input[_builtins.int]:
+        """
+        Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
+        """
         return pulumi.get(self, "password_sha256_hash_wo_version")
 
     @password_sha256_hash_wo_version.setter
@@ -43,6 +67,12 @@ class UserArgs:
     @_builtins.property
     @pulumi.getter(name="clusterName")
     def cluster_name(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+        This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+        field should only be set when there is more than one replica and you are not using 'replicated' storage for
+        user_directory.
+        """
         return pulumi.get(self, "cluster_name")
 
     @cluster_name.setter
@@ -52,6 +82,9 @@ class UserArgs:
     @_builtins.property
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Name of the user
+        """
         return pulumi.get(self, "name")
 
     @name.setter
@@ -64,20 +97,36 @@ class _UserState:
     def __init__(__self__, *,
                  cluster_name: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
+                 password_sha256_hash_wo: Optional[pulumi.Input[_builtins.str]] = None,
                  password_sha256_hash_wo_version: Optional[pulumi.Input[_builtins.int]] = None):
         """
         Input properties used for looking up and filtering User resources.
+        :param pulumi.Input[_builtins.str] cluster_name: Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+               This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+               field should only be set when there is more than one replica and you are not using 'replicated' storage for
+               user_directory.
+        :param pulumi.Input[_builtins.str] name: Name of the user
+        :param pulumi.Input[_builtins.str] password_sha256_hash_wo: SHA256 hash of the password to be set for the user
+        :param pulumi.Input[_builtins.int] password_sha256_hash_wo_version: Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
         """
         if cluster_name is not None:
             pulumi.set(__self__, "cluster_name", cluster_name)
         if name is not None:
             pulumi.set(__self__, "name", name)
+        if password_sha256_hash_wo is not None:
+            pulumi.set(__self__, "password_sha256_hash_wo", password_sha256_hash_wo)
         if password_sha256_hash_wo_version is not None:
             pulumi.set(__self__, "password_sha256_hash_wo_version", password_sha256_hash_wo_version)
 
     @_builtins.property
     @pulumi.getter(name="clusterName")
     def cluster_name(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+        This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+        field should only be set when there is more than one replica and you are not using 'replicated' storage for
+        user_directory.
+        """
         return pulumi.get(self, "cluster_name")
 
     @cluster_name.setter
@@ -87,6 +136,9 @@ class _UserState:
     @_builtins.property
     @pulumi.getter
     def name(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Name of the user
+        """
         return pulumi.get(self, "name")
 
     @name.setter
@@ -94,8 +146,23 @@ class _UserState:
         pulumi.set(self, "name", value)
 
     @_builtins.property
+    @pulumi.getter(name="passwordSha256HashWo")
+    def password_sha256_hash_wo(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        SHA256 hash of the password to be set for the user
+        """
+        return pulumi.get(self, "password_sha256_hash_wo")
+
+    @password_sha256_hash_wo.setter
+    def password_sha256_hash_wo(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "password_sha256_hash_wo", value)
+
+    @_builtins.property
     @pulumi.getter(name="passwordSha256HashWoVersion")
     def password_sha256_hash_wo_version(self) -> Optional[pulumi.Input[_builtins.int]]:
+        """
+        Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
+        """
         return pulumi.get(self, "password_sha256_hash_wo_version")
 
     @password_sha256_hash_wo_version.setter
@@ -111,12 +178,55 @@ class User(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None,
                  cluster_name: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
+                 password_sha256_hash_wo: Optional[pulumi.Input[_builtins.str]] = None,
                  password_sha256_hash_wo_version: Optional[pulumi.Input[_builtins.int]] = None,
                  __props__=None):
         """
-        Create a User resource with the given unique name, props, and options.
+        You can use the `User` resource to create a user in a `ClickHouse` instance.
+
+        Known limitations:
+
+        - Changing the `password_sha256_hash_wo` field alone does not have any effect. In order to change the password of a user, you also need to bump `password_sha256_hash_wo_version` field.
+        - Changing the user's password as described above will cause the database user to be deleted and recreated.
+        - When importing an existing user, the `User` resource will be lacking the `password_sha256_hash_wo_version` and thus the subsequent apply will need to recreate the database User in order to set a password.
+
+        ## Import
+
+        Users can be imported by specifying the ID.
+
+        Find the ID of the user by checking system.users table.
+
+        WARNING: imported users will be recreated during first 'pulumi up' because the password cannot be imported.
+
+        ```sh
+        $ pulumi import clickhousedbops:index/user:User example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        ```
+
+        It's also possible to import users using the username:
+
+        ```sh
+        $ pulumi import clickhousedbops:index/user:User example username
+        ```
+
+        IMPORTANT: if you have a multi node cluster, you need to specify the cluster name!
+
+        ```sh
+        $ pulumi import clickhousedbops:index/user:User example cluster:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        ```
+
+        ```sh
+        $ pulumi import clickhousedbops:index/user:User example cluster:username
+        ```
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[_builtins.str] cluster_name: Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+               This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+               field should only be set when there is more than one replica and you are not using 'replicated' storage for
+               user_directory.
+        :param pulumi.Input[_builtins.str] name: Name of the user
+        :param pulumi.Input[_builtins.str] password_sha256_hash_wo: SHA256 hash of the password to be set for the user
+        :param pulumi.Input[_builtins.int] password_sha256_hash_wo_version: Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
         """
         ...
     @overload
@@ -125,7 +235,42 @@ class User(pulumi.CustomResource):
                  args: UserArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Create a User resource with the given unique name, props, and options.
+        You can use the `User` resource to create a user in a `ClickHouse` instance.
+
+        Known limitations:
+
+        - Changing the `password_sha256_hash_wo` field alone does not have any effect. In order to change the password of a user, you also need to bump `password_sha256_hash_wo_version` field.
+        - Changing the user's password as described above will cause the database user to be deleted and recreated.
+        - When importing an existing user, the `User` resource will be lacking the `password_sha256_hash_wo_version` and thus the subsequent apply will need to recreate the database User in order to set a password.
+
+        ## Import
+
+        Users can be imported by specifying the ID.
+
+        Find the ID of the user by checking system.users table.
+
+        WARNING: imported users will be recreated during first 'pulumi up' because the password cannot be imported.
+
+        ```sh
+        $ pulumi import clickhousedbops:index/user:User example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        ```
+
+        It's also possible to import users using the username:
+
+        ```sh
+        $ pulumi import clickhousedbops:index/user:User example username
+        ```
+
+        IMPORTANT: if you have a multi node cluster, you need to specify the cluster name!
+
+        ```sh
+        $ pulumi import clickhousedbops:index/user:User example cluster:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        ```
+
+        ```sh
+        $ pulumi import clickhousedbops:index/user:User example cluster:username
+        ```
+
         :param str resource_name: The name of the resource.
         :param UserArgs args: The arguments to use to populate this resource's properties.
         :param pulumi.ResourceOptions opts: Options for the resource.
@@ -143,6 +288,7 @@ class User(pulumi.CustomResource):
                  opts: Optional[pulumi.ResourceOptions] = None,
                  cluster_name: Optional[pulumi.Input[_builtins.str]] = None,
                  name: Optional[pulumi.Input[_builtins.str]] = None,
+                 password_sha256_hash_wo: Optional[pulumi.Input[_builtins.str]] = None,
                  password_sha256_hash_wo_version: Optional[pulumi.Input[_builtins.int]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
@@ -155,6 +301,9 @@ class User(pulumi.CustomResource):
 
             __props__.__dict__["cluster_name"] = cluster_name
             __props__.__dict__["name"] = name
+            if password_sha256_hash_wo is None and not opts.urn:
+                raise TypeError("Missing required property 'password_sha256_hash_wo'")
+            __props__.__dict__["password_sha256_hash_wo"] = password_sha256_hash_wo
             if password_sha256_hash_wo_version is None and not opts.urn:
                 raise TypeError("Missing required property 'password_sha256_hash_wo_version'")
             __props__.__dict__["password_sha256_hash_wo_version"] = password_sha256_hash_wo_version
@@ -170,6 +319,7 @@ class User(pulumi.CustomResource):
             opts: Optional[pulumi.ResourceOptions] = None,
             cluster_name: Optional[pulumi.Input[_builtins.str]] = None,
             name: Optional[pulumi.Input[_builtins.str]] = None,
+            password_sha256_hash_wo: Optional[pulumi.Input[_builtins.str]] = None,
             password_sha256_hash_wo_version: Optional[pulumi.Input[_builtins.int]] = None) -> 'User':
         """
         Get an existing User resource's state with the given name, id, and optional extra
@@ -178,6 +328,13 @@ class User(pulumi.CustomResource):
         :param str resource_name: The unique name of the resulting resource.
         :param pulumi.Input[str] id: The unique provider ID of the resource to lookup.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[_builtins.str] cluster_name: Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+               This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+               field should only be set when there is more than one replica and you are not using 'replicated' storage for
+               user_directory.
+        :param pulumi.Input[_builtins.str] name: Name of the user
+        :param pulumi.Input[_builtins.str] password_sha256_hash_wo: SHA256 hash of the password to be set for the user
+        :param pulumi.Input[_builtins.int] password_sha256_hash_wo_version: Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
         """
         opts = pulumi.ResourceOptions.merge(opts, pulumi.ResourceOptions(id=id))
 
@@ -185,21 +342,42 @@ class User(pulumi.CustomResource):
 
         __props__.__dict__["cluster_name"] = cluster_name
         __props__.__dict__["name"] = name
+        __props__.__dict__["password_sha256_hash_wo"] = password_sha256_hash_wo
         __props__.__dict__["password_sha256_hash_wo_version"] = password_sha256_hash_wo_version
         return User(resource_name, opts=opts, __props__=__props__)
 
     @_builtins.property
     @pulumi.getter(name="clusterName")
     def cluster_name(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+        This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+        field should only be set when there is more than one replica and you are not using 'replicated' storage for
+        user_directory.
+        """
         return pulumi.get(self, "cluster_name")
 
     @_builtins.property
     @pulumi.getter
     def name(self) -> pulumi.Output[_builtins.str]:
+        """
+        Name of the user
+        """
         return pulumi.get(self, "name")
+
+    @_builtins.property
+    @pulumi.getter(name="passwordSha256HashWo")
+    def password_sha256_hash_wo(self) -> pulumi.Output[_builtins.str]:
+        """
+        SHA256 hash of the password to be set for the user
+        """
+        return pulumi.get(self, "password_sha256_hash_wo")
 
     @_builtins.property
     @pulumi.getter(name="passwordSha256HashWoVersion")
     def password_sha256_hash_wo_version(self) -> pulumi.Output[_builtins.int]:
+        """
+        Version of the password_sha256_hash_wo field. Bump this value to require a force update of the password on the user.
+        """
         return pulumi.get(self, "password_sha256_hash_wo_version")
 

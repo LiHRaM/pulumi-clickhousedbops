@@ -12,12 +12,55 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
+// You can use the `User` resource to create a user in a `ClickHouse` instance.
+//
+// Known limitations:
+//
+// - Changing the `passwordSha256HashWo` field alone does not have any effect. In order to change the password of a user, you also need to bump `passwordSha256HashWoVersion` field.
+// - Changing the user's password as described above will cause the database user to be deleted and recreated.
+// - When importing an existing user, the `User` resource will be lacking the `passwordSha256HashWoVersion` and thus the subsequent apply will need to recreate the database User in order to set a password.
+//
+// ## Import
+//
+// Users can be imported by specifying the ID.
+//
+// Find the ID of the user by checking system.users table.
+//
+// WARNING: imported users will be recreated during first 'pulumi up' because the password cannot be imported.
+//
+// ```sh
+// $ pulumi import clickhousedbops:index/user:User example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+// ```
+//
+// It's also possible to import users using the username:
+//
+// ```sh
+// $ pulumi import clickhousedbops:index/user:User example username
+// ```
+//
+// IMPORTANT: if you have a multi node cluster, you need to specify the cluster name!
+//
+// ```sh
+// $ pulumi import clickhousedbops:index/user:User example cluster:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+// ```
+//
+// ```sh
+// $ pulumi import clickhousedbops:index/user:User example cluster:username
+// ```
 type User struct {
 	pulumi.CustomResourceState
 
-	ClusterName                 pulumi.StringPtrOutput `pulumi:"clusterName"`
-	Name                        pulumi.StringOutput    `pulumi:"name"`
-	PasswordSha256HashWoVersion pulumi.IntOutput       `pulumi:"passwordSha256HashWoVersion"`
+	// Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+	// This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+	// field should only be set when there is more than one replica and you are not using 'replicated' storage for
+	// user_directory.
+	ClusterName pulumi.StringPtrOutput `pulumi:"clusterName"`
+	// Name of the user
+	Name pulumi.StringOutput `pulumi:"name"`
+	// SHA256 hash of the password to be set for the user
+	PasswordSha256HashWo pulumi.StringOutput `pulumi:"passwordSha256HashWo"`
+	// Version of the passwordSha256HashWo field. Bump this value to require a force update of the password on the user.
+	PasswordSha256HashWoVersion pulumi.IntOutput `pulumi:"passwordSha256HashWoVersion"`
 }
 
 // NewUser registers a new resource with the given unique name, arguments, and options.
@@ -27,6 +70,9 @@ func NewUser(ctx *pulumi.Context,
 		return nil, errors.New("missing one or more required arguments")
 	}
 
+	if args.PasswordSha256HashWo == nil {
+		return nil, errors.New("invalid value for required argument 'PasswordSha256HashWo'")
+	}
 	if args.PasswordSha256HashWoVersion == nil {
 		return nil, errors.New("invalid value for required argument 'PasswordSha256HashWoVersion'")
 	}
@@ -53,14 +99,30 @@ func GetUser(ctx *pulumi.Context,
 
 // Input properties used for looking up and filtering User resources.
 type userState struct {
-	ClusterName                 *string `pulumi:"clusterName"`
-	Name                        *string `pulumi:"name"`
-	PasswordSha256HashWoVersion *int    `pulumi:"passwordSha256HashWoVersion"`
+	// Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+	// This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+	// field should only be set when there is more than one replica and you are not using 'replicated' storage for
+	// user_directory.
+	ClusterName *string `pulumi:"clusterName"`
+	// Name of the user
+	Name *string `pulumi:"name"`
+	// SHA256 hash of the password to be set for the user
+	PasswordSha256HashWo *string `pulumi:"passwordSha256HashWo"`
+	// Version of the passwordSha256HashWo field. Bump this value to require a force update of the password on the user.
+	PasswordSha256HashWoVersion *int `pulumi:"passwordSha256HashWoVersion"`
 }
 
 type UserState struct {
-	ClusterName                 pulumi.StringPtrInput
-	Name                        pulumi.StringPtrInput
+	// Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+	// This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+	// field should only be set when there is more than one replica and you are not using 'replicated' storage for
+	// user_directory.
+	ClusterName pulumi.StringPtrInput
+	// Name of the user
+	Name pulumi.StringPtrInput
+	// SHA256 hash of the password to be set for the user
+	PasswordSha256HashWo pulumi.StringPtrInput
+	// Version of the passwordSha256HashWo field. Bump this value to require a force update of the password on the user.
 	PasswordSha256HashWoVersion pulumi.IntPtrInput
 }
 
@@ -69,15 +131,31 @@ func (UserState) ElementType() reflect.Type {
 }
 
 type userArgs struct {
-	ClusterName                 *string `pulumi:"clusterName"`
-	Name                        *string `pulumi:"name"`
-	PasswordSha256HashWoVersion int     `pulumi:"passwordSha256HashWoVersion"`
+	// Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+	// This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+	// field should only be set when there is more than one replica and you are not using 'replicated' storage for
+	// user_directory.
+	ClusterName *string `pulumi:"clusterName"`
+	// Name of the user
+	Name *string `pulumi:"name"`
+	// SHA256 hash of the password to be set for the user
+	PasswordSha256HashWo string `pulumi:"passwordSha256HashWo"`
+	// Version of the passwordSha256HashWo field. Bump this value to require a force update of the password on the user.
+	PasswordSha256HashWoVersion int `pulumi:"passwordSha256HashWoVersion"`
 }
 
 // The set of arguments for constructing a User resource.
 type UserArgs struct {
-	ClusterName                 pulumi.StringPtrInput
-	Name                        pulumi.StringPtrInput
+	// Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+	// This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+	// field should only be set when there is more than one replica and you are not using 'replicated' storage for
+	// user_directory.
+	ClusterName pulumi.StringPtrInput
+	// Name of the user
+	Name pulumi.StringPtrInput
+	// SHA256 hash of the password to be set for the user
+	PasswordSha256HashWo pulumi.StringInput
+	// Version of the passwordSha256HashWo field. Bump this value to require a force update of the password on the user.
 	PasswordSha256HashWoVersion pulumi.IntInput
 }
 
@@ -168,14 +246,25 @@ func (o UserOutput) ToUserOutputWithContext(ctx context.Context) UserOutput {
 	return o
 }
 
+// Name of the cluster to create the resource into. If omitted, resource will be created on the replica hit by the query.
+// This field must be left null when using a ClickHouse Cloud cluster. When using a self hosted ClickHouse instance, this
+// field should only be set when there is more than one replica and you are not using 'replicated' storage for
+// user_directory.
 func (o UserOutput) ClusterName() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *User) pulumi.StringPtrOutput { return v.ClusterName }).(pulumi.StringPtrOutput)
 }
 
+// Name of the user
 func (o UserOutput) Name() pulumi.StringOutput {
 	return o.ApplyT(func(v *User) pulumi.StringOutput { return v.Name }).(pulumi.StringOutput)
 }
 
+// SHA256 hash of the password to be set for the user
+func (o UserOutput) PasswordSha256HashWo() pulumi.StringOutput {
+	return o.ApplyT(func(v *User) pulumi.StringOutput { return v.PasswordSha256HashWo }).(pulumi.StringOutput)
+}
+
+// Version of the passwordSha256HashWo field. Bump this value to require a force update of the password on the user.
 func (o UserOutput) PasswordSha256HashWoVersion() pulumi.IntOutput {
 	return o.ApplyT(func(v *User) pulumi.IntOutput { return v.PasswordSha256HashWoVersion }).(pulumi.IntOutput)
 }
